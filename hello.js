@@ -5,7 +5,12 @@ const swaggerUi = require('swagger-ui-express');
 const swaggerDocument = require('./swagger.json');
 
 app.get('/', (req, res) => {
-  res.send('Hello World!');
+  res.send({"name": "Task API", "version": "1.0", "endpoints": ["/tasks"]});
+});
+
+
+app.get('/health', (req, res) => {
+  res.send({ "status": "ok" });
 });
 
 app.listen(port, () => {
