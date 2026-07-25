@@ -1,22 +1,171 @@
 {
   "openapi": "3.0.0",
   "info": {
-    "title": "CRUD API",
+    "title": "Task CRUD API",
     "version": "1.0.0",
-    "description": "API documentation"
+    "description": "Simple CRUD API for managing tasks."
   },
   "servers": [
     {
       "url": "http://localhost:3000"
     }
   ],
+  "tags": [
+    {
+      "name": "Tasks",
+      "description": "Task CRUD operations"
+    }
+  ],
   "paths": {
-    "/": {
+    "/tasks": {
       "get": {
-        "summary": "Home endpoint",
+        "tags": ["Tasks"],
+        "summary": "Get all tasks",
         "responses": {
           "200": {
-            "description": "Success"
+            "description": "List of tasks"
+          }
+        }
+      },
+      "post": {
+        "tags": ["Tasks"],
+        "summary": "Create a new task",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NewTask"
+              },
+              "example": {
+                "title": "Buy milk"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Task created"
+          },
+          "400": {
+            "description": "Invalid input"
+          }
+        }
+      }
+    },
+    "/tasks/{id}": {
+      "get": {
+        "tags": ["Tasks"],
+        "summary": "Get a task by ID",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Task found"
+          },
+          "404": {
+            "description": "Task not found"
+          }
+        }
+      },
+      "put": {
+        "tags": ["Tasks"],
+        "summary": "Update a task title",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NewTask"
+              },
+              "example": {
+                "title": "Updated Task"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Task updated"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "404": {
+            "description": "Task not found"
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Tasks"],
+        "summary": "Delete a task",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Task deleted"
+          },
+          "404": {
+            "description": "Task not found"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Task": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "example": 1
+          },
+          "title": {
+            "type": "string",
+            "example": "Buy milk"
+          },
+          "done": {
+            "type": "boolean",
+            "example": false
+          }
+        }
+      },
+      "NewTask": {
+        "type": "object",
+        "required": [
+          "title"
+        ],
+        "properties": {
+          "title": {
+            "type": "string",
+            "example": "Buy milk"
           }
         }
       }
