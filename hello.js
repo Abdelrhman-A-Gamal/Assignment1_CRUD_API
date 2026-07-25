@@ -4,6 +4,8 @@ const port =3000;
 const swaggerUi = require('swagger-ui-express');
 const swaggerDocument = require('./swagger.json');
 
+//app.use(express.json());
+
 const Tasks = [
     { id: 1, title: "Task1", done: true },
     { id: 2, title: "Task2", done: false },
@@ -32,6 +34,29 @@ app.get('/tasks/:id', (req, res) => {
   }
   res.json(task)
 });
+
+app.post('/tasks' ,(req, res) => {
+  const {title} =req.body;
+
+  if (!title || title.trim() === "") {
+        return res.status(400).json({
+            error: "The 'title' field is required and cannot be empty."
+        });
+    }
+  
+  const nextID=Tasks.length > 0 ? Math.max(...Tasks.map(task => task.id)) + 1 : 1;
+
+  const newTask={
+    id : nextID,
+    title : title.trim(),
+    done : false
+  };
+  Tasks.push(newTask);
+
+  res.status(201).json(newTask);
+});
+
+
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
